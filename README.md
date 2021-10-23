@@ -1,6 +1,8 @@
 # vite-plugin-blueprint
 
-A [Vite](https://vitejs.dev/) plugin that lets you easily shadow files in your app directory from a _blueprint_. Take this simple Vite app as example:
+A [Vite](https://vitejs.dev/) plugin that lets you easily shadow files in your app directory from a _blueprint_. 
+
+Take this simple Vite app as example:
 
 ```
 example
