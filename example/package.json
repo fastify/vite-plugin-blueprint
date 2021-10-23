@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "fs-extra": "^10.0.0",
+    "vite": "^2.6.10"
+  },
+  "dependencies": {
+    "desm": "^1.2.0"
+  }
+}

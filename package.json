@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "lint": "eslint . --ext js --fix"
+  },
+  "description": "",
+  "files": [
+    "index.js"
+  ],
+  "homepage": "https://github.com/terixjs/vite-plugin-blueprint",
+  "license": "MIT",
+  "main": "index.js",
+  "name": "vite-plugin-blueprint",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terixjs/vite-plugin-blueprint.git"
+  },
+  "version": "0.0.1",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1"
+  }
+}
