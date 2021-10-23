@@ -5,8 +5,8 @@ A [Vite](https://vitejs.dev/) plugin that lets you easily shadow files in your a
 Take this simple Vite app as example:
 
 ```
-example
-├── blueprint
+example/
+├── blueprint/
 │   ├── foobar.js
 │   └── main.js
 ├── index.html
