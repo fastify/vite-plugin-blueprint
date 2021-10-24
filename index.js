@@ -7,6 +7,7 @@ function vitePluginBlueprint ({ prefix, root, files }) {
     blueprint: root((...args) => resolve(urlJoin(...args))),
     app: null,
   }
+  const codes = {}
   return {
     name: 'vite-plugin-blueprint',
     configResolved (config) {
@@ -15,12 +16,15 @@ function vitePluginBlueprint ({ prefix, root, files }) {
     async resolveId (id) {
       const [, shadow] = id.split(`${prefix}/`)
       if (shadow) {
-        const [, overrides] = files.find(([file]) => shadow === file)
+        const [, overrides, code] = files.find(([file]) => shadow === file)
         for (const override of overrides) {
           const overridePath = resolve(roots.app, override)
           if (await pathExists(overridePath)) {
             return overridePath
           }
+        }
+        if (code) {
+          codes[id] = code
         }
         return id
       }
@@ -29,7 +33,7 @@ function vitePluginBlueprint ({ prefix, root, files }) {
       const [, shadow] = id.split(`${prefix}/`)
       if (shadow) {
         return {
-          code: await readFile(resolve(roots.blueprint, `${shadow}.js`), 'utf8'),
+          code: codes[id] || await readFile(resolve(roots.blueprint, `${shadow}.js`), 'utf8'),
           map: null,
         }
       }
@@ -42,7 +46,11 @@ module.exports = vitePluginBlueprint
 // Props to https://github.com/mcollina/desm
 
 function urlDirname (url) {
-  return dirname(fileURLToPath(url))
+  try {
+    return dirname(fileURLToPath(url))
+  } catch {
+    return url
+  }
 }
 
 function urlJoin (url, ...str) {
