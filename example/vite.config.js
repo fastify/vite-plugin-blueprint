@@ -4,10 +4,10 @@ export default {
   plugins: [
     vitePluginBlueprint({
       root: resolve => resolve(import.meta.url, 'blueprint'),
-      prefix: '@blueprint',
+      prefix: '@blueprint/',
       files: [
-        ['foobar', ['foobar.js']],
-        ['main', ['main.js', 'index.js']],
+        ['foobar.js'],
+        ['main.js', ['index.js']],
       ],
     }),
   ],
