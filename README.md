@@ -22,10 +22,14 @@ export default {
   plugins: [
     vitePluginBlueprint({
       root: resolve => resolve(import.meta.url, 'blueprint'),
-      prefix: '@blueprint',
+      prefix: '@blueprint/',
       files: [
-        ['foobar', ['foobar.js']],
-        ['main', ['main.js', 'index.js']],
+        // Searches foobar.js in the app root directory, 
+        // if not found, provide foobar.js from the blueprint root
+        ['foobar.js'],
+        // Searches for either main.js, index.js or start.js in the app root directory, 
+        // if not found, provide main.js from the blueprint root
+        ['main.js', ['index.js', 'start.js']],
       ],
     }),
   ],

@@ -1,5 +1,5 @@
 const { fileURLToPath } = require('url')
-const { dirname, join, resolve } = require('path')
+const { parse, dirname, join, resolve } = require('path')
 const { readFile, pathExists } = require('fs-extra')
 
 function vitePluginBlueprint ({ prefix, root, files }) {
@@ -7,33 +7,36 @@ function vitePluginBlueprint ({ prefix, root, files }) {
     blueprint: root((...args) => resolve(urlJoin(...args))),
     app: null,
   }
-  const codes = {}
   return {
     name: 'vite-plugin-blueprint',
     configResolved (config) {
       roots.app = config.root
     },
     async resolveId (id) {
-      const [, shadow] = id.split(`${prefix}/`)
+      let [, shadow] = id.split(`${prefix}`)
       if (shadow) {
-        const [, overrides, code] = files.find(([file]) => shadow === file)
-        for (const override of overrides) {
+        shadow = withoutExt(shadow)
+        let [main, overrides] = files.find(([file]) => {
+          return shadow === withoutExt(file)
+        })
+        if (!overrides) {
+          overrides = []
+        }
+        for (const override of [main, ...overrides]) {
           const overridePath = resolve(roots.app, override)
           if (await pathExists(overridePath)) {
             return overridePath
           }
         }
-        if (code) {
-          codes[id] = code
-        }
         return id
       }
     },
     async load (id) {
-      const [, shadow] = id.split(`${prefix}/`)
+      const [, shadow] = id.split(`${prefix}`)
       if (shadow) {
+        const [fileWithExt] = files.find(([file]) => withoutExt(file) === withoutExt(shadow))
         return {
-          code: codes[id] || await readFile(resolve(roots.blueprint, `${shadow}.js`), 'utf8'),
+          code: await readFile(resolve(roots.blueprint, fileWithExt), 'utf8'),
           map: null,
         }
       }
@@ -43,9 +46,15 @@ function vitePluginBlueprint ({ prefix, root, files }) {
 
 module.exports = vitePluginBlueprint
 
+function withoutExt (str) {
+  const parsed = parse(str)
+  return join(parsed.dir, parse(parsed.base).name).replace(/^\/+/, '')
+}
+
 // Props to https://github.com/mcollina/desm
 
 function urlDirname (url) {
+  // Works for both CJS and ESM
   try {
     return dirname(fileURLToPath(url))
   } catch {
