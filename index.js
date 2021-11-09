@@ -40,6 +40,8 @@ function vitePluginBlueprint ({ prefix, root, files }) {
   }
 }
 
+vitePluginBlueprint[Symbol.for('vite-plugin-blueprint')] = true
+
 module.exports = vitePluginBlueprint
 
 // Props to https://github.com/mcollina/desm
